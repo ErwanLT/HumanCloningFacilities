@@ -24,7 +24,7 @@ public class AccountService {
         if(accountRepository.findOneByUsername("kamino") == null){
             save(new Account("kamino", "kamino", AccountRole.KAMINOAIN.name()));
         }
-        if(accountRepository.findOneByUsername("Mostafa") == null){
+        if(accountRepository.findOneByUsername("palpatine") == null){
             save(new Account("palpatine", "palpatine", AccountRole.EMPEROR.name()));
         }
     }

@@ -30,5 +30,5 @@ public class Clone {
     @Nullable
     private int platoon;
 
-    private final String affiliation = "Galactic Republic";
+    private String affiliation = "Galactic Republic";
 }

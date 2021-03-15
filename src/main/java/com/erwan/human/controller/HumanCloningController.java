@@ -3,6 +3,9 @@ package com.erwan.human.controller;
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.Clone;
 import com.erwan.human.exceptions.BeanNotFound;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +42,13 @@ public class HumanCloningController {
 
     @PostMapping()
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    @ApiOperation(value = "Create a clone to fight in the clones war",
+            consumes = "application/json",
+            produces = "application/json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Clone created", response = Clone.class),
+            @ApiResponse(code = 500, message = "An error occured")
+    })
     public Clone createClone(@RequestBody Clone clone){
         return repository.save(clone);
     }

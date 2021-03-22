@@ -25,7 +25,7 @@ public class HumanCloningController {
     @Autowired
     private CloneRepository repository;
 
-    @GetMapping("/")
+    @GetMapping("/findAll")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public List<Clone> findAll() {
         return repository.findAll();

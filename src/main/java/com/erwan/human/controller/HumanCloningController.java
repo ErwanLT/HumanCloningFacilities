@@ -3,8 +3,12 @@ package com.erwan.human.controller;
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.Clone;
 import com.erwan.human.exceptions.BeanNotFound;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +23,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/kamino/clones")
+@OpenAPIDefinition(info = @Info(title = "Human cloning API",
+                                description = "API for creating clone who will fight in the clones wars",
+                                version = "2.0",
+                                contact = @Contact(
+                                        name = "LE TUTOUR Erwan",
+                                        email = "erwanletutour.elt@gmail.com",
+                                        url = "https://github.com/ErwanLT"
+                                ),
+                                license = @License(
+                                        name = "MIT Licence",
+                                        url = "https://opensource.org/licenses/mit-license.php"
+                                )
+))
 public class HumanCloningController {
 
     @Autowired
@@ -52,7 +69,7 @@ public class HumanCloningController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    @Operation(description = "Find a clone by it's ID")
+    @Operation(summary = "Find one clone", description = "Find a clone by it's ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Clone found",content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Clone.class)) }),

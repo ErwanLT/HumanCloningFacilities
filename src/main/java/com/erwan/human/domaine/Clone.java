@@ -3,71 +3,58 @@ package com.erwan.human.domaine;
 import com.erwan.human.reference.CloneType;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Getter
 @Setter
-@ApiModel
 public class Clone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    @ApiModelProperty(value = "The generated ID when saved in database",
-            name = "ID",
-            dataType = "Long",
-            required = false,
-            position = 0)
+    @Schema(description = "The generated ID when saved in database",
+            name = "id",
+            required = false)
     private Long id;
 
-    @ApiModelProperty( value = "The birthplace of my clone",
-            name = "birthPlace",
-            dataType = "String",
+    @Schema(description = "The clone code name",
+            name = "brithPlace",
             required = false,
-            position = 1
-    )
+            example = "Kamino")
+    @Size(min = 3, max = 40)
     private final String birthPlace = "Kamino";
 
-    @NotNull
-    @ApiModelProperty( value = "The code of my clone",
+    @Schema(description = "The clone code name",
             name = "codeName",
-            dataType = "String",
-            required = true,
-            position = 2
-    )
+            required = true)
+    @NotNull
     private String codeName;
 
+    @Schema(description = "The clone specialisation",
+            name = "type",
+            required = true)
     @NotNull
     @Enumerated
-    @ApiModelProperty( value = "The type of my clone",
-            name = "type",
-            dataType = "String",
-            required = true,
-            position = 3,
-            allowableValues = "flametrooper, medic, gunner, scoot, jetpack"
-    )
     private CloneType type;
 
-    @Nullable
-    @ApiModelProperty( value = "The platoon of my clone",
+    @Schema(description = "The clone's platoon",
             name = "platoon",
-            dataType = "Integer",
             required = false,
-            position = 4
-    )
+            example = "501")
+    @Nullable
     private int platoon;
 
-    @ApiModelProperty( value = "The platoon of my clone",
-            name = "platoon",
-            dataType = "Integer",
+    @Schema(description = "The clone affilation",
+            name = "affilation",
             required = false,
-            position = 5
-    )
+            minLength = 3,
+            maxLength = 40,
+            example = "Galactic Republic")
     private String affiliation = "Galactic Republic";
 }

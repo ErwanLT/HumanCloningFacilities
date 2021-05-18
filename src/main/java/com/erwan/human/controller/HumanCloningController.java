@@ -4,6 +4,7 @@ import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.Clone;
 import com.erwan.human.exceptions.BeanNotFound;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,12 @@ public class HumanCloningController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public Clone findById(@PathVariable("id") Long id) throws BeanNotFound {
+    @ApiOperation(value = "Find a clone by it's ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Clone found",response = Clone.class),
+            @ApiResponse(code = 404, message = "Clone not found")
+    })
+    public Clone findById(@ApiParam(name = "The clone ID", example = "12",required = true) @PathVariable("id") Long id) throws BeanNotFound {
         return getOne(id);
     }
 

@@ -3,13 +3,15 @@ package com.erwan.human.controller;
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.Clone;
 import com.erwan.human.exceptions.BeanNotFound;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,35 +25,42 @@ public class HumanCloningController {
     @Autowired
     private CloneRepository repository;
 
-    @Operation(summary = "Find all clones", description = "Find all clones present in database.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "found clones", content = {
-                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Clone.class)))}),
-            @ApiResponse(responseCode = "404", description = "No clones found", content = @Content) })
-    @GetMapping
+    @GetMapping("/")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public List<Clone> findAll() throws BeanNotFound {
-        List<Clone> cloneList = repository.findAll();
-        if(cloneList.isEmpty()){
-            throw new BeanNotFound("Can't find any clone");
-        }
-        return cloneList;
+    public List<Clone> findAll() {
+        return repository.findAll();
     }
 
-    @Operation(summary = "Create a clone", description = "Create a clone with the information of the body.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Clone created", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = Clone.class)) }),
-            @ApiResponse(responseCode = "500", description = "An error occured.", content = @Content) })
-    @PostMapping
+    @GetMapping("/pages")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    public Page<Clone> findAllPages(@PageableDefault(page = 0, size = 20)
+                                        @SortDefault.SortDefaults({
+                                                @SortDefault(sort = "id", direction = Sort.Direction.ASC)
+                                        }) Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    @PostMapping()
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    @ApiOperation(value = "Create a clone to fight in the clones war",
+            consumes = "application/json",
+            produces = "application/json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Clone created", response = Clone.class),
+            @ApiResponse(code = 500, message = "An error occured")
+    })
     public Clone createClone(@RequestBody Clone clone){
         return repository.save(clone);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public Clone findById(@PathVariable("id") Long id) throws BeanNotFound {
+    @ApiOperation(value = "Find a clone by it's ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Clone found",response = Clone.class),
+            @ApiResponse(code = 404, message = "Clone not found")
+    })
+    public Clone findById(@ApiParam(name = "The clone ID", example = "12",required = true) @PathVariable("id") Long id) throws BeanNotFound {
         return getOne(id);
     }
 

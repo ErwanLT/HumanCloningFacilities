@@ -5,11 +5,13 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.springframework.stereotype.Service;
 import org.apache.commons.io.IOUtils;
+import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 public class BarCodeService {
@@ -30,7 +32,7 @@ public class BarCodeService {
     }
 
     private static byte[] writeImage(BitMatrix bitMatrix) throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream(new File(BarCodeService.OTPUTFILE_NAME));
+        FileOutputStream fileOutputStream = new FileOutputStream(BarCodeService.OTPUTFILE_NAME);
         MatrixToImageWriter.writeToStream(bitMatrix, BarCodeService.IMAGE_FORMAT, fileOutputStream);
         fileOutputStream.close();
         return returnImg();
@@ -38,7 +40,7 @@ public class BarCodeService {
 
     private static byte[] returnImg() throws IOException {
 
-        InputStream targetStream = new FileInputStream(new File(BarCodeService.OTPUTFILE_NAME));
+        InputStream targetStream = new FileInputStream(BarCodeService.OTPUTFILE_NAME);
         return IOUtils.toByteArray(targetStream);
     }
 

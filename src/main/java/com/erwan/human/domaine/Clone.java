@@ -21,13 +21,11 @@ public class Clone {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     @Schema(description = "The generated ID when saved in database",
-            name = "id",
-            required = false)
+            name = "id")
     private Long id;
 
     @Schema(description = "The clone code name",
             name = "brithPlace",
-            required = false,
             example = "Kamino")
     @Size(min = 3, max = 40)
     private final String birthPlace = "Kamino";
@@ -47,14 +45,12 @@ public class Clone {
 
     @Schema(description = "The clone's platoon",
             name = "platoon",
-            required = false,
             example = "501")
     @Nullable
     private int platoon;
 
     @Schema(description = "The clone affilation",
             name = "affilation",
-            required = false,
             minLength = 3,
             maxLength = 40,
             example = "Galactic Republic")

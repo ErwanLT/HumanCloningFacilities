@@ -95,7 +95,7 @@ public class HumanCloningController {
     @PreAuthorize("hasAuthority('ROLE_EMPEROR')")
     public List<Clone> executeOrder66(){
         List<Clone> clones = repository.findAll();
-        clones.stream().forEach(clone -> clone.setAffiliation("Galactic Empire"));
+        clones.forEach(clone -> clone.setAffiliation("Galactic Empire"));
         return repository.saveAll(clones);
     }
 
@@ -108,7 +108,7 @@ public class HumanCloningController {
 
     protected Clone getOne(Long id) throws BeanNotFound {
         Optional<Clone> clone = repository.findById(id);
-        if(!clone.isPresent()){
+        if(clone.isEmpty()){
             throw new BeanNotFound("Can't find clone with id : " + id);
         }
         return clone.get();

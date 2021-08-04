@@ -3,6 +3,7 @@ package com.erwan.human.controller;
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.Clone;
 import com.erwan.human.exceptions.BeanNotFound;
+import com.erwan.human.services.BarCodeService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +42,9 @@ public class HumanCloningController {
 
     @Autowired
     private CloneRepository repository;
+
+    @Autowired
+    private BarCodeService barCodeService;
 
     @Operation(summary = "Find all clones", description = "Find all clones present in database.")
     @ApiResponses(value = {
@@ -92,6 +97,13 @@ public class HumanCloningController {
         List<Clone> clones = repository.findAll();
         clones.stream().forEach(clone -> clone.setAffiliation("Galactic Empire"));
         return repository.saveAll(clones);
+    }
+
+    @GetMapping(value = "/generateQR/{id}", produces = MediaType.IMAGE_PNG_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    public @ResponseBody byte[] generateQRCode(@PathVariable("id") Long id) throws Exception {
+        Clone clone = getOne(id);
+        return barCodeService.generateQRCodeImage(clone.toString());
     }
 
     protected Clone getOne(Long id) throws BeanNotFound {

@@ -6,6 +6,7 @@ import com.sun.istack.Nullable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Getter
 @Setter
+@ToString
 public class Clone {
 
     @Id

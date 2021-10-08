@@ -6,6 +6,7 @@ import com.sun.istack.Nullable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -13,19 +14,18 @@ import javax.validation.constraints.Size;
 @Entity
 @Getter
 @Setter
+@ToString
 public class Clone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     @Schema(description = "The generated ID when saved in database",
-            name = "id",
-            required = false)
+            name = "id")
     private Long id;
 
     @Schema(description = "The clone code name",
             name = "brithPlace",
-            required = false,
             example = "Kamino")
     @Size(min = 3, max = 40)
     private final String birthPlace = "Kamino";
@@ -45,14 +45,12 @@ public class Clone {
 
     @Schema(description = "The clone's platoon",
             name = "platoon",
-            required = false,
             example = "501")
     @Nullable
     private int platoon;
 
     @Schema(description = "The clone affilation",
             name = "affilation",
-            required = false,
             minLength = 3,
             maxLength = 40,
             example = "Galactic Republic")

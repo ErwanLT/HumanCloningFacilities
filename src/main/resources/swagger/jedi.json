@@ -1,0 +1,82 @@
+{
+  "openapi":"3.0.1",
+  "info":{
+    "title":"Jedi API",
+    "description":"API for searching jedi across the galaxy",
+    "contact":{
+      "name":"Erwan LE TUTOUR",
+      "url":"https://github.com/ErwanLT",
+      "email":"erwanletutour.elt@gmail.com"
+    },
+    "license":{
+      "name":"MIT Licence",
+      "url":"https://opensource.org/licenses/mit-license.php"
+    },
+    "version":"2.0"
+  },
+  "servers":[
+    {
+      "url":"http://localhost:8082",
+      "description":"Generated server url"
+    }
+  ],
+  "paths":{
+    "/":{
+      "get":{
+        "tags":[
+          "jedi-controller"
+        ],
+        "summary":"Find all clones",
+        "description":"Find all clones present in database.",
+        "operationId":"getAllJedi",
+        "responses":{
+          "200":{
+            "description":"found jedis",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/components/schemas/Jedi"
+                  }
+                }
+              }
+            }
+          },
+          "404":{
+            "description":"No jedi found"
+          }
+        }
+      }
+    }
+  },
+  "components":{
+    "schemas":{
+      "Jedi":{
+        "required":[
+          "name",
+          "rank"
+        ],
+        "type":"object",
+        "properties":{
+          "name":{
+            "type":"string",
+            "description":"The jedi name",
+            "example":"Anakin Skywalker"
+          },
+          "rank":{
+            "type":"string",
+            "description":"The jedi rank",
+            "example":"Master"
+          },
+          "padawan":{
+            "type":"array",
+            "items":{
+              "$ref":"#/components/schemas/Jedi"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -14,6 +14,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.api.JediControllerApi;
+import org.openapitools.client.model.Jedi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -92,6 +95,12 @@ public class HumanCloningController {
         List<Clone> clones = repository.findAll();
         clones.stream().forEach(clone -> clone.setAffiliation("Galactic Empire"));
         return repository.saveAll(clones);
+    }
+
+    @GetMapping("/jedi")
+    public List<Jedi> getAllJedi() throws ApiException {
+        JediControllerApi jediControllerApi = new JediControllerApi();
+        return jediControllerApi.getAllJedi();
     }
 
     protected Clone getOne(Long id) throws BeanNotFound {

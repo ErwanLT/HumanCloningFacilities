@@ -15,6 +15,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +43,8 @@ import java.util.Optional;
 ))
 public class HumanCloningController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HumanCloningController.class);
+
     @Autowired
     private CloneRepository repository;
 
@@ -54,10 +59,13 @@ public class HumanCloningController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public List<Clone> findAll() throws BeanNotFound {
+        LOG.info("searching all clones");
         List<Clone> cloneList = repository.findAll();
         if(cloneList.isEmpty()){
             throw new BeanNotFound("Can't find any clone");
         }
+        LOG.info("find {} clone(s)", cloneList.size());
+        LOG.info("clones : {}", cloneList);
         return cloneList;
     }
 
@@ -69,6 +77,7 @@ public class HumanCloningController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public Clone createClone(@RequestBody Clone clone){
+        LOG.info("create clone : {}", clone);
         return repository.save(clone);
     }
 
@@ -81,6 +90,7 @@ public class HumanCloningController {
             @ApiResponse(responseCode = "404", description = "No clones found", content = @Content)
     })
     public Clone findById(@Parameter(name = "The clone ID", example = "12",required = true) @PathVariable("id") Long id) throws BeanNotFound {
+        LOG.info("Searching clone by id : {}", id);
         return getOne(id);
     }
 
@@ -88,6 +98,7 @@ public class HumanCloningController {
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public void delete(@PathVariable("id") Long id) throws BeanNotFound {
         Clone clone = getOne(id);
+        LOG.info("Deleting clone : {}", clone);
         repository.delete(clone);
     }
 

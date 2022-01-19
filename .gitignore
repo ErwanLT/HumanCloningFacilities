@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+/kibana/
+/elastic/
+/logstash/
+/logs/
+/prometheus/
+/grafana/

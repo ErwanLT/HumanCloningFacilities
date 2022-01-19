@@ -14,7 +14,6 @@ import javax.validation.constraints.Size;
 @Entity
 @Getter
 @Setter
-@ToString
 public class Clone {
 
     @Id
@@ -55,4 +54,16 @@ public class Clone {
             maxLength = 40,
             example = "Galactic Republic")
     private String affiliation = "Galactic Republic";
+
+    @Override
+    public String toString() {
+        return "Clone{" +
+                "id=" + id +
+                ", birthPlace='" + birthPlace + '\'' +
+                ", codeName='" + codeName + '\'' +
+                ", type=" + type +
+                ", platoon=" + platoon +
+                ", affiliation='" + affiliation + '\'' +
+                '}';
+    }
 }

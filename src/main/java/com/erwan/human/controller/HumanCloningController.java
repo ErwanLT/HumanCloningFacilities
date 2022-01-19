@@ -15,6 +15,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.api.JediControllerApi;
+import org.openapitools.client.model.Jedi;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,6 +118,12 @@ public class HumanCloningController {
     public @ResponseBody byte[] generateQRCode(@PathVariable("id") Long id) throws Exception {
         Clone clone = getOne(id);
         return barCodeService.generateQRCodeImage(clone.toString());
+    }
+
+    @GetMapping("/jedi")
+    public List<Jedi> getAllJedi() throws ApiException {
+        JediControllerApi jediControllerApi = new JediControllerApi();
+        return jediControllerApi.getAllJedi();
     }
 
     protected Clone getOne(Long id) throws BeanNotFound {

@@ -1,4 +1,7 @@
 # HumanCloningFacilities
+[![Build Status](https://app.travis-ci.com/ErwanLT/HumanCloningFacilities.svg?branch=develop)](https://app.travis-ci.com/ErwanLT/HumanCloningFacilities)
+[![codecov](https://codecov.io/gh/ErwanLT/HumanCloningFacilities/branch/master/graph/badge.svg?token=MZ8ayvsHsv)](https://codecov.io/gh/ErwanLT/HumanCloningFacilities)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/9cb2b1cdc93841fbb73a439519c641bd)](https://www.codacy.com/gh/ErwanLT/HumanCloningFacilities/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ErwanLT/HumanCloningFacilities&amp;utm_campaign=Badge_Grade)
 ## One project for many examples
 In this little project, I tried to explain and describe what we can do with springboot concerning a simple API.
 - building it

@@ -110,6 +110,7 @@ public class HumanCloningController {
     }
 
     @GetMapping("/jedi")
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public List<Jedi> getAllJedi() throws ApiException {
         JediControllerApi jediControllerApi = new JediControllerApi();
         return jediControllerApi.getAllJedi();

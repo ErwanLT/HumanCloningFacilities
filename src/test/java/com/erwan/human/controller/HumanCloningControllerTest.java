@@ -12,19 +12,20 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class HumanCloningControllerTest extends AbstractControllerTest{
+public class HumanCloningControllerTest extends AbstractControllerTest {
 
     @Test
     public void createClone_OK() throws Exception {
         when(cloneRepository.save(any())).thenReturn(getClone(1L));
         mvc.perform(post("/kamino/clones")
-                .with(httpBasic("kamino", "kamino"))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(getClone(1L))))
-            .andDo(print())
-            .andExpect(status().isOk());
+                        .with(httpBasic("kamino", "kamino"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(getClone(1L))))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -34,9 +35,9 @@ public class HumanCloningControllerTest extends AbstractControllerTest{
         when(cloneRepository.findById(1L)).thenReturn(inDb);
 
         mvc.perform(get("/kamino/clones/1")
-                .with(httpBasic("kamino", "kamino")))
-            .andDo(print())
-            .andExpect(status().isOk());
+                        .with(httpBasic("kamino", "kamino")))
+                .andDo(print())
+                .andExpect(status().isOk());
 
     }
 
@@ -46,7 +47,8 @@ public class HumanCloningControllerTest extends AbstractControllerTest{
         mvc.perform(get("/kamino/clones/1")
                         .with(httpBasic("kamino", "kamino")))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Can't find clone with id : 1"));
     }
 
     @Test
@@ -55,6 +57,26 @@ public class HumanCloningControllerTest extends AbstractControllerTest{
                         .with(httpBasic("kamino", "kamino")))
                 .andDo(print())
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void executeOrder66_OK() throws Exception {
+        mvc.perform(put("/kamino/clones/order66")
+                        .with(httpBasic("palpatine", "palpatine")))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteClone_OK() throws Exception {
+        Clone found = getClone(1L);
+        Optional<Clone> inDb = Optional.ofNullable(found);
+        when(cloneRepository.findById(1L)).thenReturn(inDb);
+
+        mvc.perform(delete("/kamino/clones/1")
+                        .with(httpBasic("palpatine", "palpatine")))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     public static Clone getClone(Long id) {

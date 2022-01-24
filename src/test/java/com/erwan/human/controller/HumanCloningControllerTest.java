@@ -5,6 +5,7 @@ import com.erwan.human.reference.CloneType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -74,6 +75,16 @@ public class HumanCloningControllerTest extends AbstractControllerTest {
         when(cloneRepository.findById(1L)).thenReturn(inDb);
 
         mvc.perform(delete("/kamino/clones/1")
+                        .with(httpBasic("palpatine", "palpatine")))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllJedi_OK() throws Exception {
+        when(jediControllerApi.getAllJedi()).thenReturn(new ArrayList());
+
+        mvc.perform(get("/kamino/clones/jedi")
                         .with(httpBasic("palpatine", "palpatine")))
                 .andDo(print())
                 .andExpect(status().isOk());

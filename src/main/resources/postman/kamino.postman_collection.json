@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "51a2fd16-830e-4ed6-ae9e-ba86be0d19b5",
+		"name": "kamino",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "find all",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "palpatine",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "palpatine",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"codeName\": \"CC-3636\",\n    \"type\": \"gunner\",\n    \"platoon\": 104\n}"
+				},
+				"url": {
+					"raw": "{{base_path}}/kamino/clones/",
+					"host": [
+						"{{base_path}}"
+					],
+					"path": [
+						"kamino",
+						"clones",
+						""
+					]
+				},
+				"description": "find all clones in db"
+			},
+			"response": []
+		},
+		{
+			"name": "create clone",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "palpatine",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "palpatine",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"codeName\": \"CC-3636\",\n    \"type\": \"gunner\",\n    \"platoon\": 104\n}"
+				},
+				"url": {
+					"raw": "{{base_path}}/kamino/clones",
+					"host": [
+						"{{base_path}}"
+					],
+					"path": [
+						"kamino",
+						"clones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "execute order 66",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "palpatine",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "palpatine",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{base_path}}/kamino/clones/order66",
+					"host": [
+						"{{base_path}}"
+					],
+					"path": [
+						"kamino",
+						"clones",
+						"order66"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete clone",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "palpatine",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "palpatine",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_path}}/kamino/clones/3",
+					"host": [
+						"{{base_path}}"
+					],
+					"path": [
+						"kamino",
+						"clones",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "generate clone QR code",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "palpatine",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "palpatine",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_path}}/kamino/clones/generateQR/3",
+					"host": [
+						"{{base_path}}"
+					],
+					"path": [
+						"kamino",
+						"clones",
+						"generateQR",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get jedi",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "palpatine",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "palpatine",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_path}}/kamino/clones/jedi",
+					"host": [
+						"{{base_path}}"
+					],
+					"path": [
+						"kamino",
+						"clones",
+						"jedi"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "password",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "user",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_path",
+			"value": "http://localhost:8080"
+		}
+	]
+}

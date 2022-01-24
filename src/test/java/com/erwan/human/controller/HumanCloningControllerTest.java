@@ -1,78 +1,93 @@
 package com.erwan.human.controller;
 
-import com.erwan.human.HumanApiApplication;
-import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.Clone;
-import com.erwan.human.exceptions.BeanNotFound;
 import com.erwan.human.reference.CloneType;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = HumanApiApplication.class)
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class HumanCloningControllerTest {
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-    @Autowired
-    private HumanCloningController controller;
-
-    @MockBean
-    private CloneRepository repository;
+public class HumanCloningControllerTest extends AbstractControllerTest {
 
     @Test
-    public void shouldCreateBean_OK() throws Exception {
-        // Given
-        Clone input = getClone(null);
-        Clone saved = getClone(1L);
-        Mockito.when(repository.save(input)).thenReturn(saved);
-
-        // When
-        Clone output = controller.createClone(input);
-
-        // Then
-        Assert.assertNotNull(output);
-        Mockito.verify(repository).save(input);
-        Assert.assertEquals(saved, output);
+    public void createClone_OK() throws Exception {
+        when(cloneRepository.save(any())).thenReturn(getClone(1L));
+        mvc.perform(post("/kamino/clones")
+                        .with(httpBasic("kamino", "kamino"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(getClone(1L))))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void shouldFindOneBean_OK () throws Exception {
-        // Given
-        Long input = 1L;
-        Clone found = getClone(input);
+    public void findCloneById_OK() throws Exception {
+        Clone found = getClone(1L);
         Optional<Clone> inDb = Optional.ofNullable(found);
-        Mockito.when(repository.findById(input)).thenReturn(inDb);
+        when(cloneRepository.findById(1L)).thenReturn(inDb);
 
-        // When
-        Clone output = controller.findById(input);
+        mvc.perform(get("/kamino/clones/1")
+                        .with(httpBasic("kamino", "kamino")))
+                .andDo(print())
+                .andExpect(status().isOk());
 
-        // Then
-        Assert.assertNotNull(output);
-        Mockito.verify(repository).findById(input);
-        Assert.assertEquals(found, output);
     }
 
-    @Test(expected= BeanNotFound.class)
-    public void shouldFindOneBean_KO_NotFound () throws Exception {
-        // Given
-        Long input = 1L;
-        Optional<Clone> inDb = Optional.ofNullable(null);
-        Mockito.when(repository.findById(input)).thenReturn(inDb);
+    @Test
+    public void findCloneById_NotFound() throws Exception {
+        when(cloneRepository.findById(any())).thenReturn(Optional.empty());
+        mvc.perform(get("/kamino/clones/1")
+                        .with(httpBasic("kamino", "kamino")))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Can't find clone with id : 1"));
+    }
 
-        // When
-        controller.findById(input);
+    @Test
+    public void executeOrder66_NotAuthorized() throws Exception {
+        mvc.perform(put("/kamino/clones/order66")
+                        .with(httpBasic("kamino", "kamino")))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
 
-        // Then
+    @Test
+    public void executeOrder66_OK() throws Exception {
+        mvc.perform(put("/kamino/clones/order66")
+                        .with(httpBasic("palpatine", "palpatine")))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteClone_OK() throws Exception {
+        Clone found = getClone(1L);
+        Optional<Clone> inDb = Optional.ofNullable(found);
+        when(cloneRepository.findById(1L)).thenReturn(inDb);
+
+        mvc.perform(delete("/kamino/clones/1")
+                        .with(httpBasic("palpatine", "palpatine")))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllJedi_OK() throws Exception {
+        when(jediControllerApi.getAllJedi()).thenReturn(new ArrayList());
+
+        mvc.perform(get("/kamino/clones/jedi")
+                        .with(httpBasic("palpatine", "palpatine")))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     public static Clone getClone(Long id) {

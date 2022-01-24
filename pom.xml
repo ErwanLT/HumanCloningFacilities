@@ -161,12 +161,6 @@
             <artifactId>threetenbp</artifactId>
             <version>1.5.2</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13</version>
-        </dependency>
-
 
     </dependencies>
 
@@ -208,6 +202,8 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/swagger/jedi.json</inputSpec>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
                             <generatorName>java</generatorName>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>

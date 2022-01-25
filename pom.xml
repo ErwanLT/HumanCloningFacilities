@@ -111,7 +111,7 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.1</version>
         </dependency>
 
         <dependency>

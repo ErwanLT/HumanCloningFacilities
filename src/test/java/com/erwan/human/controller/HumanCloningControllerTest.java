@@ -1,7 +1,6 @@
 package com.erwan.human.controller;
 
 import com.erwan.human.domaine.Clone;
-import com.erwan.human.reference.CloneType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -90,14 +89,4 @@ public class HumanCloningControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk());
     }
 
-    public static Clone getClone(Long id) {
-        Clone clone = new Clone();
-
-        clone.setId(id);
-        clone.setPlatoon(501);
-        clone.setType(CloneType.gunner);
-        clone.setCodeName("CT-7567");
-
-        return clone;
-    }
 }

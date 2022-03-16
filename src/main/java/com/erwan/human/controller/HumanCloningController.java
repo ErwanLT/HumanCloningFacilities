@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.openapitools.client.ApiException;
-import org.openapitools.client.api.JediControllerApi;
 import org.openapitools.client.model.Jedi;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -53,6 +52,9 @@ public class HumanCloningController {
 
     @Autowired
     private BarCodeService barCodeService;
+
+    @Autowired
+    private JediControllerApiImpl jediControllerImplApi;
 
     @Operation(summary = "Find all clones", description = "Find all clones present in database.")
     @ApiResponses(value = {
@@ -121,9 +123,9 @@ public class HumanCloningController {
     }
 
     @GetMapping("/jedi")
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public List<Jedi> getAllJedi() throws ApiException {
-        JediControllerApi jediControllerApi = new JediControllerApi();
-        return jediControllerApi.getAllJedi();
+        return jediControllerImplApi.getAllJedi();
     }
 
     protected Clone getOne(Long id) throws BeanNotFound {

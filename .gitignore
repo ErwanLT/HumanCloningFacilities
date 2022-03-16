@@ -3,6 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+.mvn
 
 ### STS ###
 .apt_generated
@@ -37,3 +38,11 @@ build/
 /logs/
 /prometheus/
 /grafana/
+
+## monitoring
+elastic
+grafana
+kibana
+logstash
+prometheus
+logs

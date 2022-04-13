@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.6</version>
+            <version>1.6.7</version>
         </dependency>
 
         <dependency>
@@ -159,7 +159,7 @@
         <dependency>
             <groupId>org.threeten</groupId>
             <artifactId>threetenbp</artifactId>
-            <version>1.5.2</version>
+            <version>1.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.javafaker</groupId>

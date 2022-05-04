@@ -1,0 +1,121 @@
+package {{configPackage}};
+
+import com.erwan.human.exceptions.RestApiException;
+import com.erwan.human.exceptions.ApiHelper;
+import feign.Logger;
+import feign.auth.BasicAuthRequestInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import feign.codec.ErrorDecoder;
+import feign.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import {{modelPackage}}.*;
+
+import java.io.StringReader;
+import java.util.Date;
+
+
+
+@EnableConfigurationProperties
+public class ClientConfiguration {
+
+{{#authMethods}}
+    {{#isBasic}}
+  {{=<% %>=}}@Value("${<%title%>.security.username}")<%={{ }}=%>
+  private String {{{name}}}Username;
+
+  {{=<% %>=}}@Value("${<%title%>.security.password}")<%={{ }}=%>
+  private String {{{name}}}Password;
+
+  @Bean
+  @ConditionalOnProperty(name = "{{{title}}}.security.username")
+  public BasicAuthRequestInterceptor {{{name}}}RequestInterceptor() {
+    return new BasicAuthRequestInterceptor(this.{{{name}}}Username, this.{{{name}}}Password);
+  }
+    {{/isBasic}}
+
+
+    {{#isApiKey}}
+  {{=<% %>=}}@Value("${<%title%>.security.<%name%>.key:}")<%={{ }}=%>
+  private String {{{name}}}Key;
+
+  @Bean
+  @ConditionalOnProperty(name = "{{{title}}}.security.{{{name}}}.key")
+  public ApiKeyRequestInterceptor {{{name}}}RequestInterceptor() {
+    return new ApiKeyRequestInterceptor({{#isKeyInHeader}}"header"{{/isKeyInHeader}}{{^isKeyInHeader}}"query"{{/isKeyInHeader}}, "{{{keyParamName}}}", this.{{{name}}}Key);
+  }
+
+    {{/isApiKey}}
+    {{#isOAuth}}
+  @Bean
+  @ConditionalOnProperty("{{{title}}}.security.{{{name}}}.client-id")
+  public OAuth2FeignRequestInterceptor {{{name}}}RequestInterceptor() {
+    return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), {{{name}}}ResourceDetails());
+  }
+
+        {{#isCode}}
+  @Bean
+  @ConditionalOnProperty("{{{title}}}.security.{{{name}}}.client-id")
+  @ConfigurationProperties("{{{title}}}.security.{{{name}}}")
+  public AuthorizationCodeResourceDetails {{{name}}}ResourceDetails() {
+    AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
+    details.setAccessTokenUri("{{{tokenUrl}}}");
+    details.setUserAuthorizationUri("{{{authorizationUrl}}}");
+    return details;
+  }
+
+        {{/isCode}}
+        {{#isPassword}}
+  @Bean
+  @ConditionalOnProperty("{{{title}}}.security.{{{name}}}.client-id")
+  @ConfigurationProperties("{{{title}}}.security.{{{name}}}")
+  public ResourceOwnerPasswordResourceDetails {{{name}}}ResourceDetails() {
+    ResourceOwnerPasswordResourceDetails details = new ResourceOwnerPasswordResourceDetails();
+    details.setAccessTokenUri("{{{tokenUrl}}}");
+    return details;
+  }
+
+        {{/isPassword}}
+        {{#isApplication}}
+  @Bean
+  @ConditionalOnProperty("{{{title}}}.security.{{{name}}}.client-id")
+  @ConfigurationProperties("{{{title}}}.security.{{{name}}}")
+  public ClientCredentialsResourceDetails {{{name}}}ResourceDetails() {
+    ClientCredentialsResourceDetails details = new ClientCredentialsResourceDetails();
+    details.setAccessTokenUri("{{{tokenUrl}}}");
+    return details;
+  }
+
+        {{/isApplication}}
+        {{#isImplicit}}
+  @Bean
+  @ConditionalOnProperty("{{{title}}}.security.{{{name}}}.client-id")
+  @ConfigurationProperties("{{{title}}}.security.{{{name}}}")
+  public ImplicitResourceDetails {{{name}}}ResourceDetails() {
+    ImplicitResourceDetails details = new ImplicitResourceDetails();
+    details.setUserAuthorizationUri("{{{authorizationUrl}}}");
+    return details;
+  }
+
+        {{/isImplicit}}
+    {{/isOAuth}}
+{{/authMethods}}
+
+
+
+@Bean(name = "api{{{title}}}ErrorDecoder")
+public ErrorDecoder errorDecoder() {
+return ApiHelper.errorDecoder(RestApiException.class);
+}
+
+
+@Bean(name = "api{{{title}}}LoggerLevel")
+Logger.Level feignLoggerLevel() {
+return Logger.Level.FULL;
+}
+}

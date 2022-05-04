@@ -3,7 +3,10 @@ package com.erwan.human.controller;
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.Clone;
 import com.erwan.human.exceptions.BeanNotFound;
+import com.erwan.human.exceptions.RestApiException;
 import com.erwan.human.services.BarCodeService;
+import com.erwan.jedi.consumer.api.JediControllerApiClient;
+import com.erwan.jedi.consumer.model.Jedi;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,6 +21,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.model.Jedi;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +59,9 @@ public class HumanCloningController {
     private BarCodeService barCodeService;
 
     @Autowired
-    private JediControllerApiImpl jediControllerImplApi;
+    private JediControllerApiClient jediController;
+
+    private static final Logger LOG = LoggerFactory.getLogger(HumanCloningController.class);
 
     @Operation(summary = "Find all clones", description = "Find all clones present in database.")
     @ApiResponses(value = {
@@ -124,8 +131,8 @@ public class HumanCloningController {
 
     @GetMapping("/jedi")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public List<Jedi> getAllJedi() throws ApiException {
-        return jediControllerImplApi.getAllJedi();
+    public List<Jedi> getAllJedi() throws RestApiException {
+        return jediController.findAllUsingGET();
     }
 
     protected Clone getOne(Long id) throws BeanNotFound {

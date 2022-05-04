@@ -81,7 +81,7 @@ public class HumanCloningControllerTest extends AbstractControllerTest {
 
     @Test
     public void getAllJedi_OK() throws Exception {
-        when(jediControllerApi.getAllJedi()).thenReturn(new ArrayList());
+        when(jediControllerApi.findAllUsingGET()).thenReturn(new ArrayList());
 
         mvc.perform(get("/kamino/clones/jedi")
                         .with(httpBasic("palpatine", "palpatine")))

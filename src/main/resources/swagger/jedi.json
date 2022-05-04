@@ -1,82 +1,73 @@
 {
-  "openapi":"3.0.1",
+  "swagger":"2.0",
   "info":{
+    "description":"API for finding jedis across the galaxy",
+    "version":"1.0.O",
     "title":"Jedi API",
-    "description":"API for searching jedi across the galaxy",
     "contact":{
-      "name":"Erwan LE TUTOUR",
+      "name":"Erwan Le Tutour",
       "url":"https://github.com/ErwanLT",
       "email":"erwanletutour.elt@gmail.com"
     },
     "license":{
-      "name":"MIT Licence",
+      "name":"MIT License",
       "url":"https://opensource.org/licenses/mit-license.php"
-    },
-    "version":"2.0"
+    }
   },
-  "servers":[
+  "host":"localhost:8082",
+  "basePath":"/",
+  "tags":[
     {
-      "url":"http://localhost:8082",
-      "description":"Generated server url"
+      "name":"jedi-controller",
+      "description":"Jedi Controller"
     }
   ],
   "paths":{
-    "/":{
+    "/jedis":{
       "get":{
         "tags":[
           "jedi-controller"
         ],
-        "summary":"Find all clones",
-        "description":"Find all clones present in database.",
-        "operationId":"getAllJedi",
+        "summary":"Find all jedis",
+        "operationId":"findAllUsingGET",
+        "produces":[
+          "*/*",
+          "application/json"
+        ],
         "responses":{
           "200":{
-            "description":"found jedis",
-            "content":{
-              "application/json":{
-                "schema":{
-                  "type":"array",
-                  "items":{
-                    "$ref":"#/components/schemas/Jedi"
-                  }
-                }
+            "description":"Jedi(s) found",
+            "schema":{
+              "type":"array",
+              "items":{
+                "$ref":"#/definitions/Jedi"
               }
             }
           },
-          "404":{
-            "description":"No jedi found"
+          "500":{
+            "description":"An error occured"
           }
-        }
+        },
+        "deprecated":false
       }
     }
   },
-  "components":{
-    "schemas":{
-      "Jedi":{
-        "required":[
-          "name",
-          "rank"
-        ],
-        "type":"object",
-        "properties":{
-          "name":{
-            "type":"string",
-            "description":"The jedi name",
-            "example":"Anakin Skywalker"
-          },
-          "rank":{
-            "type":"string",
-            "description":"The jedi rank",
-            "example":"Master"
-          },
-          "padawan":{
-            "type":"array",
-            "items":{
-              "$ref":"#/components/schemas/Jedi"
-            }
-          }
+  "definitions":{
+    "Jedi":{
+      "type":"object",
+      "properties":{
+        "id":{
+          "type":"integer",
+          "format":"int64"
+        },
+        "name":{
+          "type":"string"
+        },
+        "rank":{
+          "type":"string"
         }
-      }
+      },
+      "title":"Jedi"
     }
   }
 }

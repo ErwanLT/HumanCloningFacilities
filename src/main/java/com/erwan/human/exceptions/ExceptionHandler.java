@@ -1,6 +1,5 @@
 package com.erwan.human.exceptions;
 
-import org.openapitools.client.ApiException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;

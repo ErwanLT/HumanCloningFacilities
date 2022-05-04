@@ -3,6 +3,7 @@ package com.erwan.human.controller;
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.Clone;
 import com.erwan.human.reference.CloneType;
+import com.erwan.jedi.consumer.api.JediControllerApiClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,7 +32,7 @@ public class AbstractControllerTest {
     protected CloneRepository cloneRepository;
 
     @MockBean
-    protected JediControllerApiImpl jediControllerApi;
+    protected JediControllerApiClient jediControllerApi;
 
     protected static Faker faker;
 

@@ -1,0 +1,15 @@
+package {{package}};
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
+import {{configPackage}}.ClientConfiguration;
+import {{apiPackage}}.{{classname}};
+
+
+
+@FeignClient(contextId="{{classname}}Client",
+{{=<% %>=}}
+name="<%title%>", url="${<%title%>.api.url}", configuration = ClientConfiguration.class)
+<%={{ }}=%>
+public interface {{classname}}Client extends {{classname}} {
+}

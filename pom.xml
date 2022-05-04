@@ -76,6 +76,11 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>LATEST</version>
+        </dependency>
 
         <dependency>
             <groupId>io.projectreactor</groupId>
@@ -166,6 +171,21 @@
             <artifactId>javafaker</artifactId>
             <version>1.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+            <version>10.12</version>
+        </dependency>
 
 
     </dependencies>
@@ -200,20 +220,27 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.4.0</version>
+                <version>4.3.1</version>
                 <executions>
                     <execution>
+                        <id>generate-jedi-consumer</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/swagger/jedi.json</inputSpec>
-                            <generateApiTests>false</generateApiTests>
-                            <generateModelTests>false</generateModelTests>
-                            <generatorName>java</generatorName>
+                            <templateDirectory>${basedir}/src/main/resources/swagger/templates</templateDirectory>
+                            <generatorName>spring</generatorName>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
+                                <configPackage>com.erwan.jedi.consumer.config</configPackage>
+                                <dateLibrary>java8</dateLibrary>
+                                <unhandledException>true</unhandledException>
                             </configOptions>
+                            <library>spring-cloud</library>
+                            <apiPackage>com.erwan.jedi.consumer.api</apiPackage>
+                            <modelPackage>com.erwan.jedi.consumer.model</modelPackage>
                         </configuration>
                     </execution>
                 </executions>

@@ -4,10 +4,7 @@ import com.erwan.human.reference.CloneType;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -17,6 +14,8 @@ import javax.validation.constraints.Size;
 @Setter
 @ToString
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Clone {
 
     @Id

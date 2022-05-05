@@ -18,11 +18,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.model.Jedi;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +55,6 @@ public class HumanCloningController {
 
     @Autowired
     private JediControllerApiClient jediController;
-
-    private static final Logger LOG = LoggerFactory.getLogger(HumanCloningController.class);
 
     @Operation(summary = "Find all clones", description = "Find all clones present in database.")
     @ApiResponses(value = {

@@ -125,6 +125,7 @@ public class HumanCloningController {
     @GetMapping("/jedi")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public List<Jedi> getAllJedi() throws RestApiException {
+        LOG.info("searching for the jedi");
         return jediController.findAllUsingGET();
     }
 

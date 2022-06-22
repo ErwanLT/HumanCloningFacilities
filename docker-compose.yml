@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  humanCloningFacilities:
+    image: erwanlt94/human_cloning_app:6.0.0
+    container_name: human_cloning_app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+  jediService:
+    image: erwanlt94/jedi_api:1.0.0
+    container_name: jedi_service
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+
+volumes:
+  human_cloning_facilities:
+    driver: local
+  jedi_service:
+    driver: local

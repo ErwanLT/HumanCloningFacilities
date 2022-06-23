@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   humanCloningFacilities:
-    image: erwanlt94/human_cloning_app:6.0.0
+    image: erwanlt94/human_cloning_app:7.0.0
     container_name: human_cloning_app
     restart: unless-stopped
     ports:
@@ -15,7 +15,7 @@ services:
       - "8082:8082"
 
 volumes:
-  human_cloning_facilities:
+  humanCloningFacilities:
     driver: local
-  jedi_service:
+  jediService:
     driver: local

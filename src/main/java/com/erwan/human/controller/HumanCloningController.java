@@ -94,7 +94,7 @@ public class HumanCloningController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Clone.class)) }),
             @ApiResponse(responseCode = "404", description = "No clones found", content = @Content)
     })
-    public Clone findById(@Parameter(name = "The clone ID", example = "12",required = true) @PathVariable("id") Long id) throws BeanNotFound {
+    public Clone findById(@Parameter(name = "id", example = "12",required = true) @PathVariable("id") Long id) throws BeanNotFound {
         LOG.info("Searching clone by id : {}", id);
         return getOne(id);
     }

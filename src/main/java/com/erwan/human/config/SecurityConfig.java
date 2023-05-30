@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests().antMatchers("/kamino/**").hasAnyRole("KAMINOAIN", "EMPEROR")
                 .and()
-                .authorizeRequests().antMatchers("/console/**", "/swagger-ui.html").permitAll()// pour continuer à avoir accès à la console de la bdd
+                .authorizeRequests().antMatchers("/console/**", "/swagger-ui.html", "/actuator/**").permitAll()// pour continuer à avoir accès à la console de la bdd
                 .and()
                 .httpBasic();
         http.csrf().disable().cors().disable();

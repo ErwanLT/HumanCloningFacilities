@@ -5,6 +5,7 @@ import com.erwan.human.domaine.authentification.AuthResponse;
 import com.erwan.human.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class AuthControler {
     private final UserService userService;
 
     @PostMapping("/signin")
-    @ApiOperation(value = "${UserController.signin}")
+    @Operation(summary = "Authenticate a user", description = "Generation of jwt token ")
     @ApiResponses(value = {//
             @ApiResponse(responseCode = "400", description = "Something went wrong"), //
             @ApiResponse(responseCode = "422", description = "Invalid username/password supplied")})

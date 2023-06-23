@@ -1,6 +1,6 @@
 package com.erwan.human.controller;
 
-import com.erwan.human.domaine.Clone;
+import com.erwan.human.domaine.kamino.Clone;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 

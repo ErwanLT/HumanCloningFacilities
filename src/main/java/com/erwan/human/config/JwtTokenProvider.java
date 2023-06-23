@@ -1,6 +1,6 @@
 package com.erwan.human.config;
 
-import com.erwan.human.domaine.AppUserRole;
+import com.erwan.human.domaine.authentification.AppUserRole;
 import com.erwan.human.exceptions.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

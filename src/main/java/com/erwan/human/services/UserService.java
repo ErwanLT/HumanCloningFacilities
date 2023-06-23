@@ -2,18 +2,16 @@ package com.erwan.human.services;
 
 import com.erwan.human.config.JwtTokenProvider;
 import com.erwan.human.dao.UserRepository;
-import com.erwan.human.domaine.AppUser;
-import com.erwan.human.domaine.AppUserRole;
+import com.erwan.human.domaine.authentification.AppUser;
+import com.erwan.human.domaine.authentification.AppUserRole;
 import com.erwan.human.domaine.authentification.AuthResponse;
 import com.erwan.human.exceptions.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;

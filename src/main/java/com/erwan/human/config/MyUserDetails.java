@@ -1,7 +1,7 @@
 package com.erwan.human.config;
 
 import com.erwan.human.dao.UserRepository;
-import com.erwan.human.domaine.AppUser;
+import com.erwan.human.domaine.authentification.AppUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

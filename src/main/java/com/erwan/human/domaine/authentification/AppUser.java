@@ -1,4 +1,4 @@
-package com.erwan.human.domaine;
+package com.erwan.human.domaine.authentification;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

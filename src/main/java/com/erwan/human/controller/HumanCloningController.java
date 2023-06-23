@@ -1,12 +1,10 @@
 package com.erwan.human.controller;
 
-import com.erwan.human.dao.CloneRepository;
-import com.erwan.human.domaine.Clone;
+import com.erwan.human.domaine.kamino.Clone;
+import com.erwan.human.domaine.kamino.CloneCreationRequest;
 import com.erwan.human.exceptions.BeanNotFound;
-import com.erwan.human.exceptions.RestApiException;
 import com.erwan.human.services.BarCodeService;
-import com.erwan.jedi.consumer.api.JediControllerApiClient;
-import com.erwan.jedi.consumer.model.Jedi;
+import com.erwan.human.services.CloningService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,13 +44,9 @@ import java.util.Optional;
 public class HumanCloningController {
 
     @Autowired
-    private CloneRepository repository;
-
+    private CloningService cloningService;
     @Autowired
     private BarCodeService barCodeService;
-
-    @Autowired
-    private JediControllerApiClient jediController;
 
     private static final Logger LOG = LoggerFactory.getLogger(HumanCloningController.class);
 
@@ -65,7 +59,7 @@ public class HumanCloningController {
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public List<Clone> findAll() throws BeanNotFound {
         LOG.info("searching all clones");
-        List<Clone> cloneList = repository.findAll();
+        List<Clone> cloneList = cloningService.findAllClones();
         if(cloneList.isEmpty()){
             throw new BeanNotFound("Can't find any clone");
         }
@@ -81,9 +75,9 @@ public class HumanCloningController {
             @ApiResponse(responseCode = "500", description = "An error occured.", content = @Content) })
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN')")
-    public Clone createClone(@RequestBody Clone clone){
-        LOG.info("create clone : {}", clone);
-        return repository.save(clone);
+    public Clone createClone(@RequestBody CloneCreationRequest cloneCreationRequest){
+        LOG.info("create clone : {}", cloneCreationRequest);
+        return cloningService.createClone(cloneCreationRequest);
     }
 
     @GetMapping("/{id}")
@@ -100,37 +94,30 @@ public class HumanCloningController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Kill a clone", description = "Any deficient / rebel clone should be disposed of")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public void delete(@PathVariable("id") Long id) throws BeanNotFound {
         Clone clone = getOne(id);
         LOG.info("Deleting clone : {}", clone);
-        repository.delete(clone);
+        cloningService.deleteClone(clone);
     }
 
     @PutMapping("/order66")
+    @Operation(summary = "Execution of order 66", description = "All clones affiliation will become Galactic Empire.")
     @PreAuthorize("hasAuthority('ROLE_EMPEROR')")
     public List<Clone> executeOrder66(){
-        List<Clone> clones = repository.findAll();
-        clones.forEach(clone -> clone.setAffiliation("Galactic Empire"));
-        return repository.saveAll(clones);
+        return cloningService.executeOrder66();
     }
 
     @GetMapping(value = "/generateQR/{id}", produces = MediaType.IMAGE_PNG_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN')")
     public @ResponseBody byte[] generateQRCode(@PathVariable("id") Long id) throws Exception {
         Clone clone = getOne(id);
         return barCodeService.generateQRCodeImage(clone.toString());
     }
 
-    @GetMapping("/jedi")
-    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public List<Jedi> getAllJedi() throws RestApiException {
-        LOG.info("searching for the jedi");
-        return jediController.findAllUsingGET();
-    }
-
     protected Clone getOne(Long id) throws BeanNotFound {
-        Optional<Clone> clone = repository.findById(id);
+        Optional<Clone> clone = cloningService.findOneClone(id);
         if(clone.isEmpty()){
             throw new BeanNotFound("Can't find clone with id : " + id);
         }

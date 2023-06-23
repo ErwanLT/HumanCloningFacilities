@@ -1,6 +1,6 @@
 package com.erwan.human.dao;
 
-import com.erwan.human.domaine.AppUser;
+import com.erwan.human.domaine.authentification.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;

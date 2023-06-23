@@ -1,4 +1,4 @@
-package com.erwan.human.domaine;
+package com.erwan.human.domaine.kamino;
 
 import com.erwan.human.reference.CloneType;
 import com.sun.istack.NotNull;

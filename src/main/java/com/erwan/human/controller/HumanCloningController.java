@@ -80,7 +80,7 @@ public class HumanCloningController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Clone.class)) }),
             @ApiResponse(responseCode = "500", description = "An error occured.", content = @Content) })
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN')")
     public Clone createClone(@RequestBody Clone clone){
         LOG.info("create clone : {}", clone);
         return repository.save(clone);

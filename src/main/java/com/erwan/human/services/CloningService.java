@@ -2,27 +2,28 @@ package com.erwan.human.services;
 
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.kamino.Clone;
-import com.erwan.human.domaine.kamino.CloneCreationRequest;
+import com.erwan.human.reference.CloneType;
 import com.mifmif.common.regex.Generex;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class CloningService {
     private final CloneRepository cloneRepository;
     private final static String REPUBLIC_GALACTIC = "Republic Galactic";
+    private final static List<String> PLATOONS = List.of("501", "99", "123", "666");
 
-    public Clone createClone(CloneCreationRequest cloneCreationRequest) {
+    public Clone createClone() {
         Generex generex = new Generex("[A-Z]{2}-[0-9]{3}-[A-Z]{2}");
         Clone clone = new Clone();
         clone.setAffiliation(REPUBLIC_GALACTIC);
         clone.setCodeName(generex.random());
-        clone.setPlatoon(cloneCreationRequest.getPlatoon());
-        clone.setType(cloneCreationRequest.getType());
+        Random rand = new Random();
+        clone.setPlatoon(PLATOONS.get(rand.nextInt(PLATOONS.size())));
+        clone.setType(CloneType.values()[new Random().nextInt(CloneType.values().length)]);
         return cloneRepository.save(clone);
     }
 

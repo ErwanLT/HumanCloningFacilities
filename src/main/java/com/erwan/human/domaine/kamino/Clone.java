@@ -48,7 +48,7 @@ public class Clone {
             name = "platoon",
             example = "501")
     @Nullable
-    private int platoon;
+    private String platoon;
 
     @Schema(description = "The clone affilation",
             name = "affilation",

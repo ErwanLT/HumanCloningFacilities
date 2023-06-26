@@ -1,7 +1,6 @@
 package com.erwan.human.controller;
 
 import com.erwan.human.domaine.kamino.Clone;
-import com.erwan.human.domaine.kamino.CloneCreationRequest;
 import com.erwan.human.exceptions.BeanNotFound;
 import com.erwan.human.services.BarCodeService;
 import com.erwan.human.services.CloningService;
@@ -23,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,9 +75,9 @@ public class HumanCloningController {
             @ApiResponse(responseCode = "500", description = "An error occured.", content = @Content) })
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN')")
-    public Clone createClone(@RequestBody CloneCreationRequest cloneCreationRequest){
-        LOG.info("create clone : {}", cloneCreationRequest);
-        return cloningService.createClone(cloneCreationRequest);
+    public Clone createClone(){
+        LOG.info("create clone");
+        return cloningService.createClone();
     }
 
     @GetMapping("/{id}")
@@ -109,11 +109,12 @@ public class HumanCloningController {
         return cloningService.executeOrder66();
     }
 
-    @GetMapping(value = "/generateQR/{id}", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/generateQR/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN')")
-    public @ResponseBody byte[] generateQRCode(@PathVariable("id") Long id) throws Exception {
+    public @ResponseBody String generateQRCode(@PathVariable("id") Long id) throws Exception {
         Clone clone = getOne(id);
-        return barCodeService.generateQRCodeImage(clone.toString());
+        var qrcode = barCodeService.generateQRCodeImage(clone.toString());
+        return Base64.getEncoder().encodeToString(qrcode);
     }
 
     protected Clone getOne(Long id) throws BeanNotFound {

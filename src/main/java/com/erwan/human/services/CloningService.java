@@ -2,12 +2,15 @@ package com.erwan.human.services;
 
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.kamino.Clone;
+import com.erwan.human.domaine.kamino.CloneByCategorie;
+import com.erwan.human.domaine.kamino.CloneByCategorieResponse;
 import com.erwan.human.reference.CloneType;
 import com.mifmif.common.regex.Generex;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -43,5 +46,16 @@ public class CloningService {
 
     public Optional<Clone> findOneClone(Long id) {
         return cloneRepository.findById(id);
+    }
+
+    public CloneByCategorieResponse groupCloneByCategories() {
+        var myCategories = cloneRepository.findAll().stream().collect(Collectors.groupingBy(Clone::getType,Collectors.counting()));
+        CloneByCategorieResponse response = new CloneByCategorieResponse();
+        List<CloneByCategorie> list = new ArrayList<>();
+        for (Map.Entry<CloneType, Long> entry : myCategories.entrySet()) {
+            list.add(new CloneByCategorie(entry.getKey(), entry.getValue()));
+        }
+        response.setResponse(list);
+        return response;
     }
 }

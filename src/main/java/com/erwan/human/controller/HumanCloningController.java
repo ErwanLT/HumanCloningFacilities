@@ -1,6 +1,7 @@
 package com.erwan.human.controller;
 
 import com.erwan.human.domaine.kamino.Clone;
+import com.erwan.human.domaine.kamino.CloneByCategorieResponse;
 import com.erwan.human.exceptions.BeanNotFound;
 import com.erwan.human.services.BarCodeService;
 import com.erwan.human.services.CloningService;
@@ -18,7 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,7 +104,7 @@ public class HumanCloningController {
 
     @PutMapping("/order66")
     @Operation(summary = "Execution of order 66", description = "All clones affiliation will become Galactic Empire.")
-    @PreAuthorize("hasAuthority('ROLE_EMPEROR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_EMPEROR')")
     public List<Clone> executeOrder66(){
         return cloningService.executeOrder66();
     }
@@ -115,6 +115,12 @@ public class HumanCloningController {
         Clone clone = getOne(id);
         var qrcode = barCodeService.generateQRCodeImage(clone.toString());
         return Base64.getEncoder().encodeToString(qrcode);
+    }
+
+    @GetMapping(value = "/cloneByCategories")
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    public CloneByCategorieResponse getCloneByCategories(){
+        return cloningService.groupCloneByCategories();
     }
 
     protected Clone getOne(Long id) throws BeanNotFound {

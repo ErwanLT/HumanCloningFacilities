@@ -1,6 +1,7 @@
 package com.erwan.human.controller;
 
 import com.erwan.human.domaine.kamino.Clone;
+import com.erwan.human.domaine.kamino.CloneByCategorie;
 import com.erwan.human.domaine.kamino.CloneByCategorieResponse;
 import com.erwan.human.exceptions.BeanNotFound;
 import com.erwan.human.services.BarCodeService;
@@ -119,7 +120,7 @@ public class HumanCloningController {
 
     @GetMapping(value = "/cloneByCategories")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public CloneByCategorieResponse getCloneByCategories(){
+    public List<CloneByCategorie> getCloneByCategories(){
         return cloningService.groupCloneByCategories();
     }
 

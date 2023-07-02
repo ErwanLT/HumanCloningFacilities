@@ -3,12 +3,12 @@ package com.erwan.human.services;
 import com.erwan.human.dao.CloneRepository;
 import com.erwan.human.domaine.kamino.Clone;
 import com.erwan.human.domaine.kamino.CloneByCategorie;
-import com.erwan.human.domaine.kamino.CloneByCategorieResponse;
 import com.erwan.human.reference.CloneType;
 import com.mifmif.common.regex.Generex;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,6 +18,13 @@ public class CloningService {
     private final CloneRepository cloneRepository;
     private final static String REPUBLIC_GALACTIC = "Republic Galactic";
     private final static List<String> PLATOONS = List.of("501", "99", "123", "666");
+
+    @PostConstruct
+    private void init(){
+        for (int i = 0; i < 30; i++){
+            createClone();
+        }
+    }
 
     public Clone createClone() {
         Generex generex = new Generex("[A-Z]{2}-[0-9]{3}-[A-Z]{2}");
@@ -48,14 +55,13 @@ public class CloningService {
         return cloneRepository.findById(id);
     }
 
-    public CloneByCategorieResponse groupCloneByCategories() {
-        var myCategories = cloneRepository.findAll().stream().collect(Collectors.groupingBy(Clone::getType,Collectors.counting()));
-        CloneByCategorieResponse response = new CloneByCategorieResponse();
+    public List<CloneByCategorie> groupCloneByCategories() {
+        var myCategories = cloneRepository.findAll()
+                .stream().collect(Collectors.groupingBy(Clone::getType,Collectors.counting()));
         List<CloneByCategorie> list = new ArrayList<>();
         for (Map.Entry<CloneType, Long> entry : myCategories.entrySet()) {
             list.add(new CloneByCategorie(entry.getKey(), entry.getValue()));
         }
-        response.setResponse(list);
-        return response;
+        return list;
     }
 }

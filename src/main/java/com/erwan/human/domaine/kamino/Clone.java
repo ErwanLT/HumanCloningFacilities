@@ -1,4 +1,4 @@
-package com.erwan.human.domaine;
+package com.erwan.human.domaine.kamino;
 
 import com.erwan.human.reference.CloneType;
 import com.sun.istack.NotNull;
@@ -48,7 +48,7 @@ public class Clone {
             name = "platoon",
             example = "501")
     @Nullable
-    private int platoon;
+    private String platoon;
 
     @Schema(description = "The clone affilation",
             name = "affilation",

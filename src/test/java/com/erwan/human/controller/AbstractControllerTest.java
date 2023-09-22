@@ -1,7 +1,7 @@
 package com.erwan.human.controller;
 
 import com.erwan.human.dao.CloneRepository;
-import com.erwan.human.domaine.Clone;
+import com.erwan.human.domaine.kamino.Clone;
 import com.erwan.human.reference.CloneType;
 import com.erwan.jedi.consumer.api.JediControllerApiClient;
 import com.fasterxml.jackson.databind.ObjectMapper;

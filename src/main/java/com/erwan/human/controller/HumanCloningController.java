@@ -1,12 +1,11 @@
 package com.erwan.human.controller;
 
-import com.erwan.human.dao.CloneRepository;
-import com.erwan.human.domaine.Clone;
+import com.erwan.human.domaine.kamino.Clone;
+import com.erwan.human.domaine.kamino.CloneByCategorie;
+import com.erwan.human.domaine.kamino.CloneByCategorieResponse;
 import com.erwan.human.exceptions.BeanNotFound;
-import com.erwan.human.exceptions.RestApiException;
 import com.erwan.human.services.BarCodeService;
-import com.erwan.jedi.consumer.api.JediControllerApiClient;
-import com.erwan.jedi.consumer.model.Jedi;
+import com.erwan.human.services.CloningService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,10 +20,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,13 +45,9 @@ import java.util.Optional;
 public class HumanCloningController {
 
     @Autowired
-    private CloneRepository repository;
-
+    private CloningService cloningService;
     @Autowired
     private BarCodeService barCodeService;
-
-    @Autowired
-    private JediControllerApiClient jediController;
 
     private static final Logger LOG = LoggerFactory.getLogger(HumanCloningController.class);
 
@@ -65,7 +60,7 @@ public class HumanCloningController {
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public List<Clone> findAll() throws BeanNotFound {
         LOG.info("searching all clones");
-        List<Clone> cloneList = repository.findAll();
+        List<Clone> cloneList = cloningService.findAllClones();
         if(cloneList.isEmpty()){
             throw new BeanNotFound("Can't find any clone");
         }
@@ -80,10 +75,10 @@ public class HumanCloningController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Clone.class)) }),
             @ApiResponse(responseCode = "500", description = "An error occured.", content = @Content) })
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public Clone createClone(@RequestBody Clone clone){
-        LOG.info("create clone : {}", clone);
-        return repository.save(clone);
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN')")
+    public Clone createClone(){
+        LOG.info("create clone");
+        return cloningService.createClone();
     }
 
     @GetMapping("/{id}")
@@ -100,37 +95,37 @@ public class HumanCloningController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Kill a clone", description = "Any deficient / rebel clone should be disposed of")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public void delete(@PathVariable("id") Long id) throws BeanNotFound {
         Clone clone = getOne(id);
         LOG.info("Deleting clone : {}", clone);
-        repository.delete(clone);
+        cloningService.deleteClone(clone);
     }
 
     @PutMapping("/order66")
-    @PreAuthorize("hasAuthority('ROLE_EMPEROR')")
+    @Operation(summary = "Execution of order 66", description = "All clones affiliation will become Galactic Empire.")
+    @PreAuthorize("hasAnyAuthority('ROLE_EMPEROR')")
     public List<Clone> executeOrder66(){
-        List<Clone> clones = repository.findAll();
-        clones.forEach(clone -> clone.setAffiliation("Galactic Empire"));
-        return repository.saveAll(clones);
+        return cloningService.executeOrder66();
     }
 
-    @GetMapping(value = "/generateQR/{id}", produces = MediaType.IMAGE_PNG_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public @ResponseBody byte[] generateQRCode(@PathVariable("id") Long id) throws Exception {
+    @GetMapping(value = "/generateQR/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN')")
+    public @ResponseBody String generateQRCode(@PathVariable("id") Long id) throws Exception {
         Clone clone = getOne(id);
-        return barCodeService.generateQRCodeImage(clone.toString());
+        var qrcode = barCodeService.generateQRCodeImage(clone.toString());
+        return Base64.getEncoder().encodeToString(qrcode);
     }
 
-    @GetMapping("/jedi")
+    @GetMapping(value = "/cloneByCategories")
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
-    public List<Jedi> getAllJedi() throws RestApiException {
-        LOG.info("searching for the jedi");
-        return jediController.findAllUsingGET();
+    public List<CloneByCategorie> getCloneByCategories(){
+        return cloningService.groupCloneByCategories();
     }
 
     protected Clone getOne(Long id) throws BeanNotFound {
-        Optional<Clone> clone = repository.findById(id);
+        Optional<Clone> clone = cloningService.findOneClone(id);
         if(clone.isEmpty()){
             throw new BeanNotFound("Can't find clone with id : " + id);
         }

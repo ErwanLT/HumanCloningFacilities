@@ -21,7 +21,7 @@ public class CloningService {
 
     @PostConstruct
     private void init(){
-        for (int i = 0; i < 30; i++){
+        for (int i = 0; i < 60; i++){
             createClone();
         }
     }
